@@ -12,7 +12,7 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const logoRef = useRef<HTMLAnchorElement>(null);
