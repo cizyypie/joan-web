@@ -13,128 +13,142 @@ export default function Hero() {
   const buttonsRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const charRefs = useRef<HTMLSpanElement[]>([]);
 
   useEffect(() => {
-  const ctx = gsap.context(() => {
-
-    const tl = gsap.timeline({
-      defaults: {
-        ease: "power3.out",
-      },
-    });
-
-    tl.fromTo(
-      titleRef.current,
-      {
-        y: 120,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-      }
-    )
-
-    .fromTo(
-      subtitleRef.current,
-      {
-        y: 40,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.7,
-      },
-      "-=0.55"
-    )
-
-    .fromTo(
-      bodyRef.current,
-      {
-        y: 30,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.7,
-      },
-      "-=0.45"
-    )
-
-    .fromTo(
-      microcopyRef.current,
-      {
-        y: 20,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.6,
-      },
-      "-=0.4"
-    )
-
-    .fromTo(
-      buttonsRef.current?.children ?? [],
-      {
-        y: 20,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        stagger: 0.12,
-        duration: 0.5,
-      },
-      "-=0.35"
-    )
-
-    .fromTo(
-      imageRef.current,
-      {
-        clipPath: "inset(0 0 100% 0)",
-        scale: 1.15,
-        opacity: 0,
-      },
-      {
-        clipPath: "inset(0 0 0% 0)",
-        scale: 1,
-        opacity: 1,
-        duration: 1.4,
-      },
-      "-=1"
-    )
-
-    .fromTo(
-      scrollIndicatorRef.current,
-      {
-        opacity: 0,
-        y: -10,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        onComplete: () => {
-          gsap.to(scrollIndicatorRef.current, {
-            y: 6,
-            repeat: -1,
-            yoyo: true,
-            duration: 0.9,
-            ease: "sine.inOut",
-          });
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        paused: true,
+        defaults: {
+          ease: "power3.out",
         },
-      }
-    );
+      });
 
-  });
+      tl.fromTo(
+        charRefs.current,
+        {
+          y: 100,
+          opacity: 0,
+          rotateX: -80,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          rotateX: 0,
+          duration: 1.1,
+          stagger: 0.09,
+          ease: "power3.out",
+        },
+      )
 
-  return () => ctx.revert();
-}, []);
+        .fromTo(
+          subtitleRef.current,
+          {
+            y: 40,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+          },
+          "-=0.55",
+        )
+
+        .fromTo(
+          bodyRef.current,
+          {
+            y: 30,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+          },
+          "-=0.45",
+        )
+
+        .fromTo(
+          microcopyRef.current,
+          {
+            y: 20,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+          },
+          "-=0.4",
+        )
+
+        .fromTo(
+          buttonsRef.current?.children ?? [],
+          {
+            y: 20,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.12,
+            duration: 0.5,
+          },
+          "-=0.35",
+        )
+
+        .fromTo(
+          imageRef.current,
+          {
+            clipPath: "inset(0 0 100% 0)",
+            scale: 1.15,
+            opacity: 0,
+          },
+          {
+            clipPath: "inset(0 0 0% 0)",
+            scale: 1,
+            opacity: 1,
+            duration: 1.4,
+          },
+          "-=1",
+        )
+
+        .fromTo(
+          scrollIndicatorRef.current,
+          {
+            opacity: 0,
+            y: -10,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            onComplete: () => {
+              gsap.to(scrollIndicatorRef.current, {
+                y: 6,
+                repeat: -1,
+                yoyo: true,
+                duration: 0.9,
+                ease: "sine.inOut",
+              });
+            },
+          },
+        );
+
+      const startHeroAnimation = () => {
+        tl.play();
+      };
+
+      window.addEventListener("introComplete", startHeroAnimation);
+
+      return () => {
+        window.removeEventListener("introComplete", startHeroAnimation);
+        ctx.revert();
+      };
+    });
+  }, []);
+
   return (
     <section
       id="hero"
@@ -145,16 +159,16 @@ export default function Hero() {
         pt-24 pb-16
       "
     >
-     <div className="w-full px-6 md:px-12 lg:px-24">
-        <div className="
+      <div className="w-full px-6 md:px-12 lg:px-24">
+        <div
+          className="
           grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr]
           gap-8 md:gap-10 lg:gap-14
           items-center
-        ">
-
-          {/* ── LEFT: Text Content ── */}
+        "
+        >
+          {/*LEFT: Text Content*/}
           <div className="flex flex-col gap-2">
-
             {/* Headline */}
             <h1
               ref={titleRef}
@@ -162,9 +176,20 @@ export default function Hero() {
                 text-7xl md:text-8xl lg:text-9xl
                 font-bold tracking-tighter
                 text-black leading-none
+                [perspective:900px]
               "
             >
-              {heroContent.headline}
+              {heroContent.headline.split("").map((char, index) => (
+                <span
+                  key={`${char}-${index}`}
+                  ref={(el) => {
+                    if (el) charRefs.current[index] = el;
+                  }}
+                  className="inline-block"
+                >
+                  {char}
+                </span>
+              ))}
             </h1>
 
             {/* Subheadline */}
@@ -205,10 +230,7 @@ export default function Hero() {
             </p>
 
             {/* Buttons */}
-            <div
-              ref={buttonsRef}
-              className="flex flex-wrap gap-4 mt-2"
-            >
+            <div ref={buttonsRef} className="flex flex-wrap gap-4 mt-2">
               {heroContent.buttons.map((btn) => (
                 <a
                   key={btn.label}
@@ -217,11 +239,12 @@ export default function Hero() {
                     inline-flex items-center gap-2
                     px-6 py-3 text-sm font-medium
                     transition-all duration-200
-                    ${btn.label === "Enter Site"
-                      ? // Primary button: filled black
-                        "bg-black text-white hover:bg-black/80"
-                      : // Secondary button: outlined
-                        "border border-black text-black hover:bg-black hover:text-white"
+                    ${
+                      btn.label === "Enter Site"
+                        ? // Primary button: filled black
+                          "bg-black text-white hover:bg-black/80"
+                        : // Secondary button: outlined
+                          "border border-black text-black hover:bg-black hover:text-white"
                     }
                   `}
                 >
@@ -231,20 +254,20 @@ export default function Hero() {
                 </a>
               ))}
             </div>
-
           </div>
 
-          {/* ── RIGHT: Photo ── */}
+          {/*RIGHT: Photo*/}
           <div
             ref={imageRef}
             className="relative flex flex-col items-center md:items-end"
           >
-
             {/* Photo label — top right of image */}
-            <div className="
+            <div
+              className="
               self-end mb-3
               text-right
-            ">
+            "
+            >
               <p className="text-xs font-mono text-black/40 tracking-widest uppercase">
                 {heroContent.photo.label}
               </p>
@@ -257,25 +280,27 @@ export default function Hero() {
             </div>
 
             {/* Portrait image */}
-           <div className="
+            <div
+              className="
             relative w-full
             max-w-sm md:max-w-md
             aspect-[9/16]
             overflow-hidden
             border border-black/10
-          ">
-            <Image
-              src={heroContent.photo.src}
-              alt={heroContent.photo.alt}
-              fill
-              className="object-cover object-top"
-              priority
-            />
+          "
+            >
+              <Image
+                src={heroContent.photo.src}
+                alt={heroContent.photo.alt}
+                fill
+                className="object-cover object-top"
+                priority
+              />
+            </div>
           </div>
-         </div>
         </div>
 
-        {/* ── Scroll Indicator ── */}
+        {/*Scroll Indicator*/}
         <div
           ref={scrollIndicatorRef}
           className="
@@ -285,19 +310,20 @@ export default function Hero() {
           "
         >
           {/* Mouse icon */}
-          <div className="
+          <div
+            className="
             w-5 h-8 rounded-full
             border-2 border-black/20
             flex items-start justify-center
             pt-1.5
-          ">
+          "
+          >
             <div className="w-0.5 h-1.5 bg-black/30 rounded-full" />
           </div>
           <span className="text-xs tracking-widest font-mono uppercase">
             Scroll to explore
           </span>
         </div>
-
       </div>
     </section>
   );
