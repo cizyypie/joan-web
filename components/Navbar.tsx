@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -14,18 +15,136 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+  const logoRef = useRef<HTMLAnchorElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const desktopLinksRef = useRef<HTMLLIElement[]>([]);
+  const mobileLinksRef = useRef<HTMLLIElement[]>([]);
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
+  const setDesktopLinkRef = (el: HTMLLIElement | null, index: number) => {
+    if (el) desktopLinksRef.current[index] = el;
+  };
 
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const setMobileLinkRef = (el: HTMLLIElement | null, index: number) => {
+    if (el) mobileLinksRef.current[index] = el;
+  };
 
   const closeMenu = () => setMenuOpen(false);
+
+ useEffect(() => {
+  let hasPlayed = false;
+
+  const playNavbarIntro = () => {
+    if (hasPlayed) return;
+    hasPlayed = true;
+
+    gsap.fromTo(
+      logoRef.current,
+      {
+        y: -34,
+        opacity: 0,
+        rotate: -10,
+        scale: 0.7,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        rotate: 0,
+        scale: 1,
+        duration: 0.9,
+        ease: "bounce.out",
+      },
+    );
+
+    gsap.fromTo(
+      [...desktopLinksRef.current, hamburgerRef.current].filter(Boolean),
+      {
+        y: -28,
+        opacity: 0,
+        rotate: -4,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        rotate: 0,
+        duration: 0.75,
+        ease: "bounce.out",
+        stagger: 0.08,
+        delay: 0.12,
+      },
+    );
+  };
+
+  window.addEventListener("introComplete", playNavbarIntro);
+
+  const fallback = window.setTimeout(playNavbarIntro, 2500);
+
+  return () => {
+    window.removeEventListener("introComplete", playNavbarIntro);
+    window.clearTimeout(fallback);
+  };
+}, []);
+
+  useEffect(() => {
+    let hasPlayed = false;
+
+    const playNavbarIntro = () => {
+      if (hasPlayed) return;
+      hasPlayed = true;
+
+      const items = [
+        logoRef.current,
+        ...desktopLinksRef.current,
+        hamburgerRef.current,
+      ].filter(Boolean);
+
+      gsap.fromTo(
+        items,
+        {
+          y: -28,
+          opacity: 0,
+          rotate: -4,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          rotate: 0,
+          duration: 0.75,
+          ease: "bounce.out",
+          stagger: 0.08,
+        },
+      );
+    };
+
+    window.addEventListener("introComplete", playNavbarIntro);
+
+    const fallback = window.setTimeout(playNavbarIntro, 2500);
+
+    return () => {
+      window.removeEventListener("introComplete", playNavbarIntro);
+      window.clearTimeout(fallback);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    gsap.fromTo(
+      mobileLinksRef.current,
+      {
+        y: -18,
+        opacity: 0,
+        scale: 0.96,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 0.55,
+        ease: "bounce.out",
+        stagger: 0.07,
+      },
+    );
+  }, [menuOpen]);
 
   return (
     <header
@@ -41,6 +160,7 @@ export default function Navbar() {
     >
       <nav className="w-full px-6 md:px-12 lg:px-20 flex items-center justify-between">
         <a
+          ref={logoRef}
           href="#hero"
           onClick={closeMenu}
           className="text-xl font-bold tracking-tight text-black"
@@ -48,10 +168,12 @@ export default function Navbar() {
           J.
         </a>
 
-        {/* Desktop nav */}
         <ul className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <li key={link.label}>
+          {navLinks.map((link, index) => (
+            <li
+              key={link.label}
+              ref={(el) => setDesktopLinkRef(el, index)}
+            >
               <a
                 href={link.href}
                 className="
@@ -66,9 +188,9 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Mobile hamburger */}
         <div className="md:hidden">
           <button
+            ref={hamburgerRef}
             type="button"
             onClick={() => setMenuOpen((current) => !current)}
             aria-label="Toggle navigation menu"
@@ -102,7 +224,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile menu */}
       <div
         className={`
           md:hidden overflow-hidden bg-white border-t border-black/10
@@ -111,8 +232,11 @@ export default function Navbar() {
         `}
       >
         <ul className="flex flex-col px-6 py-4">
-          {navLinks.map((link) => (
-            <li key={link.label}>
+          {navLinks.map((link, index) => (
+            <li
+              key={link.label}
+              ref={(el) => setMobileLinkRef(el, index)}
+            >
               <a
                 href={link.href}
                 onClick={closeMenu}
