@@ -138,6 +138,34 @@ export const projects: Project[] = [
   github: "https://github.com/cizyypie/command-line-chess",
   live: "",
 },
+{
+  title: "Mofii Streaming Platform Prototype",
+  label: "UI/UX Project",
+  image: "/projects/mofii.png",
+  description:
+    "UI/UX prototype for a streaming platform concept, designed in Figma with focus on content discovery, visual hierarchy, user flow, and modern entertainment platform layout.",
+  tags: ["Figma", "UI Design", "UX Design", "Prototype", "Wireframing", "Team Collaboration"],
+  type: "UI/UX",
+  github: "",
+  live: "https://www.figma.com/design/GDeZzhqIkATLi42KhuoV9A/Mofii.?node-id=373-665&t=lEIjrgk8w1s3IiJL-1",
+},
+{
+  title: "Hackathon Web3 Project",
+  label: "Team Project",
+  image: "/projects/hackathon-project.png",
+  description:
+    "Team-based hackathon project where I contributed to frontend development, wallet integration, UI polishing, product presentation, and social media content support.",
+  tags: [
+    "Frontend",
+    "Wallet Integration",
+    "Web3",
+    "Team Collaboration",
+    "Product Presentation",
+  ],
+  type: "Team Project",
+  github: "",
+  live: "https://devfolio.co/projects/lummy-9a9c",
+},
  {
   title: "Personal Website",
   label: "Frontend Project",

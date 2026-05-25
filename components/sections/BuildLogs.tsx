@@ -302,14 +302,14 @@ export default function BuildLogs() {
                       group/live
                     "
                   >
-                    Live Site
-                    <span
-                      className="
+                 {project.type === "UI/UX" ? "View Prototype" : "Live Site"}
+                  <span
+                    className="
                       inline-block
                       transition-transform duration-200
                       group-hover/live:translate-x-1
                     "
-                    >
+                  >
                       ↗
                     </span>
                   </a>
