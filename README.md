@@ -1,12 +1,4 @@
-# Joan Web
-
-Personal portfolio website built to showcase my projects, technical skills, and frontend development practice.
-
-## Overview
-
-Joan Web is my personal website built with Next.js, TypeScript, Tailwind CSS, and GSAP.
-
-The goal of this project is to create a clean, responsive, and animated portfolio that presents my work as a fullstack web developer learner. It includes sections for introduction, skills, selected projects, build logs, and contact information.
+Personal portfolio website
 
 ## Tech Stack
 
