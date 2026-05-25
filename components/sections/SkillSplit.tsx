@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { skillSplitContent } from "@/data/content";
-import InteractivePortrait from "./ui/InteractivePortrait";
+import InteractivePortrait from "../ui/InteractivePortrait";
 
 gsap.registerPlugin(ScrollTrigger);
 
