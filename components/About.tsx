@@ -1,51 +1,92 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { aboutContent } from "@/data/content";
+import InteractivePortrait from "@/components/ui/InteractivePortrait";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLParagraphElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const paragraphRefs = useRef<HTMLParagraphElement[]>([]);
+  const badgeRefs = useRef<HTMLSpanElement[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        textRef.current,
-        { y: 40, opacity: 0 },
+      gsap.set(
+        [
+          imageRef.current,
+          labelRef.current,
+          headlineRef.current,
+          ...paragraphRefs.current,
+          ...badgeRefs.current,
+        ],
         {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
-            toggleActions: "play none none none",
-          },
+          y: 40,
+          opacity: 0,
         },
       );
 
-      gsap.fromTo(
-        imageRef.current,
-        { x: -40, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.9,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
-            toggleActions: "play none none none",
-          },
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 65%",
+          toggleActions: "play none none none",
+          once: true,
         },
-      );
+        defaults: {
+          ease: "power3.out",
+        },
+      });
+
+      tl.to(imageRef.current, {
+        y: 0,
+        opacity: 1,
+        duration: 0.9,
+      })
+        .to(
+          labelRef.current,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+          },
+          "-=0.45",
+        )
+        .to(
+          headlineRef.current,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.75,
+          },
+          "-=0.25",
+        )
+        .to(
+          paragraphRefs.current,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.15,
+          },
+          "-=0.25",
+        )
+        .to(
+          badgeRefs.current,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.45,
+            stagger: 0.08,
+          },
+          "-=0.2",
+        );
 
       gsap.to(imageRef.current, {
         yPercent: -8,
@@ -58,7 +99,7 @@ export default function About() {
         },
       });
     }, sectionRef);
-    
+
     return () => ctx.revert();
   }, []);
 
@@ -80,24 +121,11 @@ export default function About() {
             items-center
           "
         >
-          {/* LEFT IMAGE */}
           <div ref={imageRef} className="flex flex-col gap-4">
-            <div
-              className="
-                relative w-full
-                max-w-sm md:max-w-md
-                aspect-[9/16]
-                overflow-hidden
-                border border-black/10
-              "
-            >
-              <Image
-                src={aboutContent.photo.src}
-                alt={aboutContent.photo.alt}
-                fill
-                className="object-cover object-center"
-              />
-            </div>
+            <InteractivePortrait
+              src={aboutContent.photo.src}
+              alt={aboutContent.photo.alt}
+            />
 
             <div>
               <p className="text-xs font-mono text-black/40 tracking-widest uppercase">
@@ -106,13 +134,12 @@ export default function About() {
               <p className="text-sm font-medium text-black">
                 {aboutContent.photo.caption}
               </p>
-              <p className="text-xs text-black/50">{aboutContent.photo.sub}</p>
             </div>
           </div>
 
-          {/* RIGHT TEXT */}
-          <div ref={textRef} className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6">
             <p
+              ref={labelRef}
               className="
                 text-xs font-mono font-medium
                 tracking-widest uppercase text-black/40
@@ -122,6 +149,7 @@ export default function About() {
             </p>
 
             <h2
+              ref={headlineRef}
               className="
                 text-3xl md:text-4xl lg:text-5xl
                 font-bold tracking-tight text-black
@@ -132,9 +160,12 @@ export default function About() {
             </h2>
 
             <div className="flex flex-col gap-4">
-              {aboutContent.paragraphs.map((paragraph) => (
+              {aboutContent.paragraphs.map((paragraph, index) => (
                 <p
                   key={paragraph}
+                  ref={(el) => {
+                    if (el) paragraphRefs.current[index] = el;
+                  }}
                   className="
                     text-base md:text-lg
                     text-black/60
@@ -148,9 +179,12 @@ export default function About() {
             </div>
 
             <div className="flex flex-wrap gap-2 pt-2">
-              {aboutContent.badges.map((badge) => (
+              {aboutContent.badges.map((badge, index) => (
                 <span
                   key={badge}
+                  ref={(el) => {
+                    if (el) badgeRefs.current[index] = el;
+                  }}
                   className="
                     px-3 py-1.5
                     border border-black/15
