@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { buildLogsContent, projects } from "@/data/content";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -203,7 +204,38 @@ export default function BuildLogs() {
                   text-white/20 text-xs tracking-[0.3em]
                 "
                 >
-                  PROJECT PREVIEW
+                  <div
+                  className="
+                    relative w-full
+                    aspect-video
+                    overflow-hidden
+                    border border-black/10
+                    bg-black
+                  "
+                >
+                  {project.image ? (
+                    <Image
+                      src={project.image}
+                      alt={`${project.title} preview`}
+                      fill
+                      className="
+                        object-cover
+                        transition-transform duration-500
+                        group-hover:scale-105
+                      "
+                    />
+                  ) : (
+                    <div
+                      className="
+                        absolute inset-0
+                        flex items-center justify-center
+                        text-white/20 text-xs tracking-[0.3em]
+                      "
+                    >
+                      PROJECT PREVIEW
+                    </div>
+                  )}
+                </div>
                 </div>
               </div>
 
