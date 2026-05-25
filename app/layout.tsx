@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "JOAN",
+  title: "Joan Portfolio",
   description:
     "A personal web experience by Joanita. Backend-rooted web developer learning to craft clean, interactive fullstack experiences.",
   openGraph: {
