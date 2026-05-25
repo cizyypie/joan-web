@@ -26,8 +26,9 @@ export default function PageIntro() {
       onComplete: () => {
         document.body.style.overflow = "";
         gsap.set(root, { display: "none" });
-
-        window.dispatchEvent(new Event("introComplete"));
+        requestAnimationFrame(() => {
+          window.dispatchEvent(new Event("introComplete"));
+        });
       },
     });
 
@@ -126,10 +127,10 @@ export default function PageIntro() {
             text-xs md:text-sm
             font-mono uppercase
             tracking-[0.35em]
-            text-white/75
+            text-white/100
           "
         >
-          JOANITA / FROM LOGIC TO MOTION
+          HI 👋
         </div>
 
         <div
