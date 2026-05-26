@@ -165,17 +165,6 @@ export const projects: Project[] = [
   type: "Team Project",
   github: "",
   live: "https://devfolio.co/projects/lummy-9a9c",
-},
- {
-  title: "Personal Website",
-  label: "Frontend Project",
-  image: "/projects/joan-web.png",
-  description:
-    "Personal portfolio website built to showcase projects, technical skills, design taste, and frontend animation practice.",
-  tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "GSAP"],
-  type: "Frontend",
-  github: "https://github.com/cizyypie/joan-web",
-  live: "",
 }
 ];
 
